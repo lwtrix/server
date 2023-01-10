@@ -7,7 +7,7 @@ import cors from "cors";
 const port = process.env.PORT;
 const server = express();
 
-const corsWhitelist = ['http://localhost:3000', 'http://goodsite.com']
+const corsWhitelist = [process.env.FE_DEV_ORIGIN, process.env.FE_PROD_ORIGIN]
 
 const corsConfig = {
   origin: (origin, corsNext) => {
