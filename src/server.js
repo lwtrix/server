@@ -20,7 +20,7 @@ const corsConfig = {
   },
 };
 
-server.use(cors());
+server.use(cors(corsConfig));
 server.use(express.json());
 server.use("/planners", plannersRouter);
 server.use("/planners", tasksRouter);

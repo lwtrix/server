@@ -11,7 +11,7 @@ const getPDFReadableStream = (plannerData) => {
       const plannerName = plannerData.plannerName
       const plannerTasks = plannerData.plannerTasks
       const tasksTableBody = plannerTasks.map(plan => (
-          [plan.content, plan.done]
+          [plan.content, `${plan.done ? 'Done' : 'Not done'}`]
       ))
 
       const docDefinition = {
