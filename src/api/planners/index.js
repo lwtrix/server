@@ -1,5 +1,7 @@
 import express from "express";
 import uniqid from "uniqid";
+import {pipeline} from 'stream'
+import getPDFReadableStream from "../../utils/pdf-tools.js";
 import { getPlanners, getTasks, writePlanners, writeTasks } from "../../utils/rw-tools.js";
 import { checkPlannerSchema, triggerBadReq } from "./schema.js";
 
@@ -23,6 +25,7 @@ plannersRouter.get("/", async (req, res, next) => {
 
   res.send(planners);
 });
+
 plannersRouter.get("/:id", async (req, res, next) => {
   const planners = await getPlanners();
   const { id } = req.params;
@@ -61,5 +64,30 @@ plannersRouter.delete("/:id", async (req, res, next) => {
   
   res.send().status(204);
 });
+
+plannersRouter.get('/:id/pdf', async (req, res, next) => {
+  const { id } = req.params
+
+  const planners = await getPlanners()
+  const foundPlanner = planners.find(plan => plan.id === id)
+  const tasks = await getTasks()
+  const foundPlannerTasks = tasks.filter(task => task.plannerId === id)
+  
+  if(foundPlanner && foundPlannerTasks) {
+    const plannerData = {
+      plannerName: foundPlanner.name,
+      plannerTasks: foundPlannerTasks
+    }
+  
+    res.setHeader("Content-Disposition", "attachment; filename=test.pdf")
+    const source = getPDFReadableStream(plannerData)
+    const destination = res
+  
+    pipeline(source, destination, err => {
+      if(err) console.log(err)
+    })
+  }
+  
+})  
 
 export default plannersRouter;
