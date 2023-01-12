@@ -2,7 +2,7 @@ import { fileURLToPath } from 'url'
 import { dirname, join } from "path";
 import fs from 'fs-extra'
 
-const { readJSON, writeJSON } = fs
+const { readJSON, writeJSON, createReadStream } = fs
 
 const dataFolderPath = join(dirname(fileURLToPath(import.meta.url)), '../data')
 
